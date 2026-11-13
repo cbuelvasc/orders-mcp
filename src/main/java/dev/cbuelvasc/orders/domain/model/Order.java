@@ -1,10 +1,12 @@
 package dev.cbuelvasc.orders.domain.model;
 
+import dev.cbuelvasc.orders.domain.exception.OrderCannotBeCancelledException;
+
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Objects;
 
-/** Order aggregate (read side). Pure Java: no framework annotations. */
+/** Order aggregate. Pure Java: no framework annotations. Immutable: changes return a new Order. */
 public record Order(OrderId id,
                     CustomerId customerId,
                     OrderStatus status,
@@ -21,5 +23,13 @@ public record Order(OrderId id,
             throw new IllegalArgumentException("total must be >= 0");
         }
         Objects.requireNonNull(currency);
+    }
+
+    /** Business rule: only orders that have not left the warehouse can be cancelled. */
+    public Order cancel(Instant now) {
+        if (!status.isCancellable()) {
+            throw new OrderCannotBeCancelledException(id, status);
+        }
+        return new Order(id, customerId, OrderStatus.CANCELLED, total, currency, now);
     }
 }

@@ -5,12 +5,30 @@ spring:
     mcp:
       server:
         name: orders-mcp-server
-        version: 0.1.0
+        version: 0.4.0
         type: SYNC
         protocol: STREAMABLE   # SSE | STREAMABLE | STATELESS -> endpoint: /mcp
   threads:
     virtual:
       enabled: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${ISSUER_URI:http://localhost:8180/realms/orders}
+  docker:
+    compose:
+      lifecycle-management: start-only   # keep containers running between restarts
+
+orders:
+  mcp:
+    security:
+      resource: ${MCP_RESOURCE_URL:http://localhost:8080/mcp}
+      authorization-servers:
+        - ${ISSUER_URI:http://localhost:8180/realms/orders}
+      scopes:
+        - orders:read
+        - orders:write
 
 management:
   endpoints:
@@ -20,3 +38,8 @@ management:
   metrics:
     tags:
       application: ${spring.application.name}
+    distribution:
+      percentiles-histogram:
+        mcp.tool.duration: true     # enables p95/p99 in Grafana
+      slo:
+        mcp.tool.duration: 50ms, 100ms, 250ms

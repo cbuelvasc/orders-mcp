@@ -27,6 +27,8 @@ class OrderMcpToolsTest {
                 throw new OrderNotFoundException(id);
             },
             (customerId, limit) -> List.of(order("ORD-2"), order("ORD-1")),
+            id -> new Order(id, CustomerId.of("CUS-1"), OrderStatus.PAID, BigDecimal.TEN, "USD",
+                    Instant.parse("2026-11-13T10:00:00Z")).cancel(Instant.parse("2026-11-13T11:00:00Z")),
             meters);
 
     @Test
@@ -53,6 +55,14 @@ class OrderMcpToolsTest {
         var views = tools.listRecentOrders("CUS-1", null);
 
         assertThat(views).extracting(OrderView::orderId).containsExactly("ORD-2", "ORD-1");
+    }
+
+    @Test
+    void cancelOrderReturnsTheCancelledOrder() {
+        var view = tools.cancelOrder("ORD-7");
+
+        assertThat(view.status()).isEqualTo("CANCELLED");
+        assertThat(view.isFinal()).isTrue();
     }
 
     private static Order order(String id) {

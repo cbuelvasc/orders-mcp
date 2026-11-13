@@ -15,7 +15,8 @@ class HexagonalArchitectureTest {
     static final ArchRule domainIsPureJava = noClasses()
             .that().resideInAPackage("..domain..")
             .should().dependOnClassesThat().resideInAnyPackage(
-                    "org.springframework..", "jakarta..", "io.micrometer..", "io.modelcontextprotocol..");
+                    "org.springframework..", "jakarta..", "io.micrometer..", "io.modelcontextprotocol..",
+                    "java.sql..");
 
     @ArchTest
     static final ArchRule applicationDoesNotDependOnFrameworks = noClasses()
@@ -32,6 +33,11 @@ class HexagonalArchitectureTest {
             .that().resideOutsideOfPackage("..adapter.in.mcp..")
             .should().dependOnClassesThat().resideInAnyPackage(
                     "org.springframework.ai..", "io.modelcontextprotocol..");
+
+    @ArchTest
+    static final ArchRule onlyTheJdbcAdapterKnowsSql = noClasses()
+            .that().resideOutsideOfPackage("..adapter.out.jdbc..")
+            .should().dependOnClassesThat().resideInAnyPackage("org.springframework.jdbc..", "java.sql..");
 
     @ArchTest
     static final ArchRule adaptersTalkToPortsNotToTheService = noClasses()

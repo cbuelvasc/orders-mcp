@@ -67,5 +67,10 @@ class OrderQueryServiceTest {
             lastLimit = limit;
             return List.of();
         }
+
+        @Override
+        public Order save(Order order) {
+            return order;
+        }
     }
 }

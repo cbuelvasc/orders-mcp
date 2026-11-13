@@ -6,4 +6,8 @@ public enum OrderStatus {
     public boolean isFinal() {
         return this == DELIVERED || this == CANCELLED;
     }
+
+    public boolean isCancellable() {
+        return this == CREATED || this == PAID;
+    }
 }

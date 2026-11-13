@@ -1,5 +1,6 @@
 package dev.cbuelvasc.orders.infrastructure.adapter.in.rest;
 
+import dev.cbuelvasc.orders.domain.exception.OrderCannotBeCancelledException;
 import dev.cbuelvasc.orders.domain.exception.OrderNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -13,6 +14,11 @@ class RestExceptionHandler {
     @ExceptionHandler(OrderNotFoundException.class)
     ProblemDetail notFound(OrderNotFoundException e) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage());
+    }
+
+    @ExceptionHandler(OrderCannotBeCancelledException.class)
+    ProblemDetail conflict(OrderCannotBeCancelledException e) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, e.getMessage());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
