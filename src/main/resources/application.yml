@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: orders-mcp
+  ai:
+    mcp:
+      server:
+        name: orders-mcp-server
+        version: 0.1.0
+        type: SYNC
+        protocol: STREAMABLE   # SSE | STREAMABLE | STATELESS -> endpoint: /mcp
+  threads:
+    virtual:
+      enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics, prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}
