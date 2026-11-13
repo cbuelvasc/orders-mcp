@@ -13,7 +13,7 @@ import java.util.Objects;
 
 /**
  * Application service. No Spring annotations: it is wired in infrastructure/config,
- * so the core stays framework-agnostic (verified by ArchitectureTest).
+ * so the core stays framework-agnostic (verified by HexagonalArchitectureTest).
  */
 public class OrderQueryService implements FindOrderUseCase, ListRecentOrdersUseCase {
 
