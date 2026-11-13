@@ -4,5 +4,5 @@ build/
 .idea/
 *.iml
 .vscode/
-out/
+/out/
 .DS_Store
