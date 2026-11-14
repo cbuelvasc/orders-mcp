@@ -6,3 +6,6 @@ build/
 .vscode/
 /out/
 .DS_Store
+
+# k6 run logs
+errores.log
